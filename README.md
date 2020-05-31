@@ -20,7 +20,7 @@
 *   Connection>SSH>Auth  
     *    [X] Allow agent forwarding  
     *    Privatekey file for authentication  
-         *    %userprofile%\Documents\Vagrant\\.vagrant\machines\ansible\virtualbox\private_key.ppk  
+         *    %userprofile%\Documents\GitHub\vagrant-ansible\\.vagrant\machines\ansible\virtualbox\private_key.ppk
 *   Save  
 
 # Configure Ansible
