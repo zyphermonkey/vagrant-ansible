@@ -7,7 +7,7 @@
 
 [VirtualBox](https://www.virtualbox.org/wiki/Downloads)  
 [Vagrant](https://www.vagrantup.com/downloads.html)  
-
+`powershell.exe -ExecutionPolicy Bypass -File requirements.ps1`
 
 # Setup
 *  `cd $env:userprofile\Documents`
