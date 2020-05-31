@@ -1,0 +1,54 @@
+---
+- hosts: all
+  become: true
+  tasks:
+# /etc/netplan/01-netcfg.yaml
+    - name: Copy 01-netcfg.yaml
+      copy:
+        src: 01-netcfg.yml
+        dest: /etc/netplan/01-netcfg.yaml
+        owner: root
+        group: root
+        mode: 0644
+      notify: netplan apply
+
+# /etc/ssh/ssh_config:   ForwardAgent yes
+# /etc/ssh/sshd_config:  AllowAgentForwarding yes
+    - name: Setup SSH Agent Forwarding
+      lineinfile:
+        path: "{{ item.path }}"
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { path: '/etc/ssh/ssh_config', regexp: '^#?\s?ForwardAgent', line: 'ForwardAgent yes' }
+        - { path: '/etc/ssh/sshd_config', regexp: '^#?AllowAgentForwarding', line: 'AllowAgentForwarding yes' }
+      notify: restart sshd
+
+    - name: Configure ansible.cfg
+      ini_file:
+        path: /home/vagrant/ansible.cfg
+        section: defaults
+        option: vault_password_file
+        value: /home/vagrant/vault-pass.txt
+
+    - name: Configure ansible.cfg
+      ini_file:
+        path: /home/vagrant/ansible.cfg
+        section: defaults
+        option: stdout_callback
+        value: yaml
+
+    - name: Disable SSH MOTD
+      lineinfile:
+        path: /home/vagrant/.ssh/config
+        line: LogLevel QUIET
+        create: true
+
+  handlers:
+    - name: netplan apply
+      become: true
+      command: netplan apply
+    - name: restart sshd
+      service:
+        name: sshd
+        state: restarted        
