@@ -44,6 +44,16 @@
         line: LogLevel QUIET
         create: true
 
+    - name: Force color prompt
+      lineinfile:
+        path: "{{ item }}"
+        regexp: "^#?force_color_prompt="
+        line: "force_color_prompt=yes"
+        state: present
+      loop:
+        - /home/vagrant/.bashrc
+        - /root/.bashrc
+
   handlers:
     - name: netplan apply
       become: true
